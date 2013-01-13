@@ -15,8 +15,8 @@ p, div#display, ul { margin:0; }
 div#screen p, div#screen span, div#screen a { white-space:pre-wrap; }
 div#screen p.error { color:red; }
 div#screen li { list-style:none; }
-div#welcome { display:none; }
-h1, h2 { background-color:#FFF; color:#000; }
+div#welcome { margin-bottom: 23px; }
+h1, h2 {  }
 h3 { color:#FFF; text-decoration:underline; margin:5px 0; }
 h4, h5, h6 { text-decoration:none; margin:0; }
 a, a:visited, .linky { color:#FFF; cursor:pointer; font-weight:bold; text-decoration:none; }
@@ -39,3 +39,14 @@ form#searchform input[type=submit] { background-color:#FFF; border:1px solid #00
 div#credit { position:absolute; bottom:0; color:#FFF; font-size:xx-small; opacity:.25; }
 div#credit:hover { opacity:.75; }
 div#credit a { font-size:xx-small; text-decoration:underline; }
+
+/* by xavierskip */
+#title{
+	font-size: 30px;
+}
+#welcome span {
+	font-size: 10px;
+	position: relative;
+	top:23px;
+}
+#credit {display: none;}

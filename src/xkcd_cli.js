@@ -90,6 +90,9 @@ var xkcdDisplay = TerminalShell.commands['display'] = function(terminal, path) {
 	}, fail);
 };
 
+
+//xkcdDisplay commands
+
 TerminalShell.commands['next'] = function(terminal) {
 	xkcdDisplay(terminal, xkcd.last.num+1);
 };
@@ -141,6 +144,7 @@ TerminalShell.commands['sudo'] = function(terminal) {
 	}
 };
 
+// todo what?
 TerminalShell.filters.push(function (terminal, cmd) {
 	if (/!!/.test(cmd)) {
 		var newCommand = cmd.replace('!!', this.lastCommand);
@@ -151,12 +155,24 @@ TerminalShell.filters.push(function (terminal, cmd) {
 	}
 });
 
+
+// shut down 
 TerminalShell.commands['shutdown'] = TerminalShell.commands['poweroff'] = function(terminal) {
 	if (this.sudo) {
-		terminal.print('Broadcast message from guest@xkcd');
+		terminal.print('Bye Bye!');
 		terminal.print();
-		terminal.print('The system is going down for maintenance NOW!');
+		terminal.print('please enter "ctrl + w" ');
 		return $('#screen').fadeOut();
+	} else {
+		terminal.print('Must be root.');
+	}
+};
+
+TerminalShell.commands['restart'] = TerminalShell.commands['reboot'] = function(terminal) {
+	if (this.sudo) {
+		TerminalShell.commands['poweroff'](terminal).queue(function(next) {
+			window.location.reload();
+		});
 	} else {
 		terminal.print('Must be root.');
 	}
@@ -170,29 +186,23 @@ TerminalShell.commands['quit'] = function(terminal) {
 	terminal.promptActive = false;
 };
 
-TerminalShell.commands['restart'] = TerminalShell.commands['reboot'] = function(terminal) {
-	if (this.sudo) {
-		TerminalShell.commands['poweroff'](terminal).queue(function(next) {
-			window.location.reload();
-		});
-	} else {
-		terminal.print('Must be root.');
-	}
-};
 
+// open url
 function linkFile(url) {
 	return {type:'dir', enter:function() {
 		window.location = url;
 	}};
 }
 
+// file system
 Filesystem = {
 	'welcome.txt': {type:'file', read:function(terminal) {
-		terminal.print($('<h4>').text('Welcome to the unixkcd console.'));
+		terminal.print($('<h3>').text('Terminal emulator by Javascript'));
 		terminal.print('To navigate the comics, enter "next", "prev", "first", "last", "display", or "random".');
 		terminal.print('Use "ls", "cat", and "cd" to navigate the filesystem.');
 	}},
 	'license.txt': {type:'file', read:function(terminal) {
+		terminal.print($('<h2>').html('fork from <a href="https://github.com/chromakode/xkcdfools">chromakode / xkcdfools</a>'))
 		terminal.print($('<p>').html('Client-side logic for Wordpress CLI theme :: <a href="http://thrind.xamai.ca/">R. McFarland, 2006, 2007, 2008</a>'));
 		terminal.print($('<p>').html('jQuery rewrite and overhaul :: <a href="http://www.chromakode.com/">Chromakode, 2010</a>'));
 		terminal.print();
@@ -215,11 +225,10 @@ Filesystem = {
 		});
 	}}
 };
-Filesystem['blog'] = Filesystem['blag'] = linkFile('http://blag.xkcd.com');
-Filesystem['forums'] = Filesystem['fora'] = linkFile('http://forums.xkcd.com/');
-Filesystem['store'] = linkFile('http://store.xkcd.com/');
-Filesystem['about'] = linkFile('http://xkcd.com/about/');
-TerminalShell.pwd = Filesystem;
+Filesystem['blog']   = linkFile('http://blog.xavierskip.com');
+Filesystem['resume'] = linkFile('http://blog.xavierskip.com/resume/');
+
+TerminalShell.pwd = Filesystem; // this.pwd = Filrsystem
 
 TerminalShell.commands['cd'] = function(terminal, path) {
 	if (path in this.pwd) {
@@ -252,7 +261,7 @@ TerminalShell.commands['cat'] = function(terminal, path) {
 		} else if (this.pwd[path].type == 'dir') {
 			terminal.print('cat: '+path+': Is a directory');
 		}
-	} else if (pathFilename(path) == 'alt.txt') {
+	} else if (pathFilename(path) == 'alt.txt') { //  ?????
 		terminal.setWorking(true);
 		num = Number(path.match(/^\d+/));
 		xkcd.get(num, function(data) {
@@ -263,7 +272,7 @@ TerminalShell.commands['cat'] = function(terminal, path) {
 			terminal.setWorking(false);
 		});
 	} else {
-		terminal.print('You\'re a kitty!');
+		terminal.print('no cat!');
 	}
 };
 
@@ -287,12 +296,14 @@ TerminalShell.commands['rm'] = function(terminal, flags, path) {
 		if (this.sudo) {
 			TerminalShell.commands = {};
 		} else {
-			terminal.print('rm: cannot remove /: Permission denied');
+			terminal.print('哼！自己开个虚拟机去试，别在这里');
 		}
 	}
 };
 
-TerminalShell.commands['cheat'] = function(terminal) {
+/* example
+TerminalShell.commands['******'] = function(terminal) {
+	termainal.************
 	terminal.print($('<a>').text('*** FREE SHIPPING ENABLED ***').attr('href', 'http://store.xkcd.com/'));
 }; 
 
@@ -304,23 +315,6 @@ TerminalShell.commands['reddit'] = function(terminal, num) {
 		var url = window.location;
 	}
 	terminal.print($('<iframe src="http://www.reddit.com/static/button/button1.html?width=140&url='+encodeURIComponent(url)+'&newwindow=1" height="22" width="140" scrolling="no" frameborder="0"></iframe>'));
-};
-
-TerminalShell.commands['wget'] = TerminalShell.commands['curl'] = function(terminal, dest) {
-	if (dest) {
-		terminal.setWorking(true);
-		var browser = $('<div>')
-			.addClass('browser')
-			.append($('<iframe>')
-					.attr('src', dest).width("100%").height(600)
-					.one('load', function() {
-						terminal.setWorking(false);
-					}));
-		terminal.print(browser);
-		return browser;
-	} else {
-		terminal.print("Please specify a URL.");
-	}
 };
 
 TerminalShell.commands['write'] =
@@ -338,24 +332,38 @@ TerminalShell.commands['irc'] = function(terminal, nick) {
 		terminal.print('usage: irc <nick>');
 	}
 };
-
 TerminalShell.commands['unixkcd'] = function(terminal, nick) {
 	TerminalShell.commands['curl'](terminal, "http://www.xkcd.com/unixkcd/");
+};
+*/
+TerminalShell.commands['wget'] = TerminalShell.commands['curl'] = function(terminal, dest) {
+	if (dest) {
+		terminal.setWorking(true);
+		var browser = $('<div>')
+			.addClass('browser')
+			.append($('<iframe>')
+					.attr('src', dest).width("100%").height(600)
+					.one('load', function() {
+						terminal.setWorking(false);
+					}));
+		terminal.print(browser);
+		return browser;
+	} else {
+		terminal.print("Please specify a URL.");
+	}
 };
 
 TerminalShell.commands['apt-get'] = function(terminal, subcmd) {
 	if (!this.sudo && (subcmd in {'update':true, 'upgrade':true, 'dist-upgrade':true})) {
 		terminal.print('E: Unable to lock the administration directory, are you root?');
 	} else {
-		if (subcmd == 'update') {
-			terminal.print('Reading package lists... Done');
-		} else if (subcmd == 'upgrade') {
+		if (subcmd == 'update' && subcmd == 'upgrade') {  // browser
 			if (($.browser.name == 'msie') || ($.browser.name == 'firefox' && $.browser.versionX < 3)) {
 				terminal.print($('<p>').append($('<a>').attr('href', 'http://abetterbrowser.org/').text('To complete installation, click here.')));
-			} else {
+			}else {
 				terminal.print('This looks pretty good to me.');
 			}
-		} else if (subcmd == 'dist-upgrade') {
+		} else if (subcmd == 'dist-upgrade') {           // Operating system
 			var longNames = {'win':'Windows', 'mac':'OS X', 'linux':'Linux'};
 			var name = $.os.name;
 			if (name in longNames) {
@@ -372,6 +380,17 @@ TerminalShell.commands['apt-get'] = function(terminal, subcmd) {
 			terminal.print('*  /\\---/\\  ');
 			terminal.print('   ~~   ~~  '); 
 			terminal.print('...."Have you mooed today?"...');
+		} else if (subcmd == 'girlfriend') {
+			terminal.print('正在读取软件包列表...完成');
+			terminal.print('正在分析软件包的依赖关系...完成');
+			terminal.print('有一些软件包无法被安装。');
+			terminal.print('下列的信息可能会对解决问题有所帮助:');
+			terminal.print('下列的软件包有不能满足的依赖关系:');
+			terminal.print('girlfriend: 依赖 house 但是没有安装');
+			terminal.print('girlfriend: 依赖 car   但是没有安装');
+			terminal.print('hourse,car: 依赖 money 但是没有安装');
+			terminal.print('E: 无法安装的软件包');
+			terminal.print('just kidding');
 		} else if (!subcmd) {
 			terminal.print('This APT has Super Cow Powers.');
 		} else {
@@ -397,7 +416,7 @@ TerminalShell.commands['man'] = function(terminal, what) {
 		'cat':  'You are now riding a half-man half-cat.'
 	};
 	if (!oneLiner(terminal, what, pages)) {
-		terminal.print('Oh, I\'m sure you can figure it out.');
+		terminal.print('Oh, man man man!');
 	}
 };
 
@@ -595,9 +614,9 @@ $(document).ready(function() {
 			if (data) {
 				xkcd.latest = data;
 				$('#screen').one('cli-ready', function(e) {
-					Terminal.runCommand('cat welcome.txt');
+					Terminal.runCommand('display '+xkcd.latest.num+'/'+pathFilename(xkcd.latest.img));
 				});
-				Terminal.runCommand('display '+xkcd.latest.num+'/'+pathFilename(xkcd.latest.img));
+				Terminal.runCommand('cat welcome.txt');
 			} else {
 				noData();
 			}
