@@ -23,13 +23,14 @@
   <script type="text/javascript" src="../site_config.js"></script>
   <script type="text/javascript" src="xkcd_cli_all.js"></script> 
   -->
+  
  </head>
  <body> 
   <div id="pagealert" title="Press any key for next page of text"> --More-- </div>
   <div id="indicators"><span id="alt-indicator">Alt-</span><span id="ctrl-indicator">Ctrl-</span> <span id="scroll-indicator">SCR LOCK</span></div>
   <div id="screen">
    <div id="display">
-    <p id="time">2013/1/13 7:45</p>
+    <p id="time"> </p>
     <div id="welcome">
       <p>welcome to</p>
       <header id="title">
@@ -46,6 +47,30 @@
    </div>
   </div>
   <div id="credit">Art by <a href="http://xkcd.com/about/">Randall Munroe</a>. XKCD CLI by <a href="http://chromakode.com">Chromakode</a>. Original CLI2 by <a href="http://thrind.xamai.ca">Rod McFarland</a>. <a href="http://github.com/chromakode/xkcdfools">Source code</a>.</div>
+
+  <script type="text/javascript">
+    function show_time(){
+      var t    = new Date();
+      var week = ['零','一','二','三','四','五','六','天']
+      var y   = t.getFullYear(),
+        mon = t.getMonth()+1,
+        d   = t.getDate(),
+        D   = t.getDay(),
+        h   = t.getHours().toString(),
+        min = t.getMinutes().toString();
+      var zero = function(n){
+        if(n.length <=1){
+          return 0+n
+        }else{
+          return n
+        };
+      };
+      $('#time').html(d+'/'+mon+'/'+y+' '+zero(h)+':'+zero(min)+' 星期'+week[D]);
+      setTimeout(show_time,10000);
+    }
+    show_time();
+  </script>
+
  </body>
 </html>
 
