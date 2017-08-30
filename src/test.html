@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>keyboard</title>
+    <script type="text/javascript" src="static/jquery-1.8.3.min.js"></script>
+    <style type="text/css">
+    body {width: 100%;height: 1000px;border: 3px solid;}
+    .clipboard {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        opacity: 0.01;
+        width: 2px;
+        }
+    p{
+        padding: 0px;
+        margin: 0px;
+    }
+    </style>
+</head>
+<body>
+<!-- <p>
+    $('body').click(function(e){$('.clipboard').focus();})
+</p><textarea class="clipboard"></textarea> -->
+<div id="debug"></div>
+<script type="text/javascript">
+    $('body').click(function(e){$('.clipboard').focus();})
+    var debug = $('#debug');
+    var touch = {identifier:null};
+    function touchstart(e){
+        console.log('touchstart',e)
+        var t = e.changedTouches[0]
+        debug.append($('<p>').text(t.identifier+':'+t.screenX+','+t.screenY))
+    }
+    function touchmove(e){
+        e.preventDefault();
+        // console.log('touchmove',e)
+    }
+    function touchend(e){
+        console.log('touchend',e)
+        var t = e.changedTouches[0]
+        debug.append($('<p>').text(t.identifier+':'+t.screenX+','+t.screenY))
+    }
+    window.addEventListener('touchstart',touchstart)
+    window.addEventListener('touchmove',touchmove)
+    window.addEventListener('touchend',touchend)
+</script>
+</body>
+</html>
