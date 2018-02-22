@@ -518,7 +518,7 @@ var xkcd = {
     latest: null,
     last: null,
     cache: {},
-    base: 'http://dynamic.xkcd.com/api-0/jsonp/comic/',
+    base: '//dynamic.xkcd.com/api-0/jsonp/comic/',
     
     get: function(num, success, error) {
         if (num == null) {
