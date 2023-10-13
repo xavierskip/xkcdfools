@@ -896,7 +896,7 @@ TerminalShell.commands['apt-get'] = function(terminal, subcmd) {
             terminal.print('下列的软件包有不能满足的依赖关系:');
             terminal.print('girlfriend: 依赖 house 但是没有安装');
             terminal.print('girlfriend: 依赖 car   但是没有安装');
-            terminal.print('hourse,car: 依赖 money 但是没有安装');
+            terminal.print('house, car: 依赖 money 但是没有安装');
             terminal.print('E: 无法安装的软件包');
             terminal.print('just kidding');
         } else if (!subcmd) {
