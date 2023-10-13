@@ -715,20 +715,10 @@ Filesystem = {
             terminal.print(line);
         });
     }},
-    'Contact': {type:'path',links:{
-            weibo:'',
-            github:'',
-            douban:'',
-            v2ex:'',
-            twitter:'',
-            mail:''
-        }
-    }
 };
-Filesystem['blog']   = linkFile('http://blog.xavierskip.com');
+Filesystem['blog']   = linkFile('https://blog.xavierskip.com');
+Filesystem['AI']   = linkFile('https://chat.xavierskip.com/');
 Filesystem['mail']   = linkFile('mailto:xavierskip@gmail.com');
-Filesystem['telegram']   = linkFile('https://telegram.me/skipto');
-
 
 TerminalShell.pwd = Filesystem; // this.pwd = Filrsystem
 
