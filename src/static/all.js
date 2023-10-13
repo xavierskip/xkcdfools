@@ -7,32 +7,14 @@
  Chromakode, 2010
  http://www.chromakode.com/
 */
-/**** start from http://snippets.dzone.com/posts/show/701 ****/
-// Removes leading whitespaces
-function ltrim(value) {
-    if (value) {
-        var re = /\s*((\S+\s*)*)/;
-        return value.replace(re, '$1');
-    }
-    return '';
-}
-
-// Removes ending whitespaces
-function rtrim(value) {
-    if (value) {
-        var re = /((\s*\S+)*)\s*/;
-        return value.replace(re, '$1');
-    }
-    return '';
-}
 
 // Removes leading and ending whitespaces
 function trim(value) {
     if (value) {
-        return ltrim(rtrim(value));
+        return value.trim();
     }
     return '';
-} /**** end from http://snippets.dzone.com/posts/show/701 ****/
+}
 
 function entityEncode(str) {
     str = str.replace(/&/g, '&amp;');
@@ -242,8 +224,15 @@ var Terminal = {
                 }
             });
         // mobile client
+        var input = document.querySelector(".clipboard");
+        input.addEventListener("input", function(e){
+            e.target.value = e.target.value.trimStart();
+            Terminal.buffer  = e.target.value;
+            Terminal.setPos(e.target.value.length);
+            // Terminal.updateInputDisplay();
+        });
         $('.clipboard')
-            .bind('keydown', 'return', function(e) { Terminal.processInputBuffer(); })
+            .bind('keydown', 'return', function(e) {Terminal.processInputBuffer(); e.target.value="";})
             .bind('keydown', 'backspace',function(e){e.preventDefault();Terminal.deleteCharacter(e.shiftKey);})
         // keep bottom
         $(window).resize(this.setFocus);
