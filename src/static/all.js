@@ -717,7 +717,6 @@ Filesystem = {
     }},
 };
 Filesystem['blog']   = linkFile('https://blog.xavierskip.com');
-Filesystem['AI']   = linkFile('https://chat.xavierskip.com/');
 Filesystem['mail']   = linkFile('mailto:xavierskip@gmail.com');
 
 TerminalShell.pwd = Filesystem; // this.pwd = Filrsystem
