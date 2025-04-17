@@ -1,0 +1,30 @@
+/* https://cld.sh/writings/styling-remark42.php */
+@import url("/remark42/web/remark-old.css");
+:root{
+    --color9:  #E7350F;
+    --color10: rgba(56,53,111,0.7);
+    --color15: #E7350F; 
+    --color29: #FF2d00;
+    --color33: #FF2d00;
+    --color47: rgba(230,82,90,0.4);  
+    --primary-color: 252,105,73;
+    --primary-brighter-color: 231,53,15;
+}
+@media (prefers-color-scheme: dark) {
+    :root .dark {
+        --color7:  #22073d;
+        --color8:  #32164d;
+        --color9:  #57d35d;
+        --color10: #ffff9b;
+        --color15: #57d35d;
+        --color29: #57d35d;
+        --color33: #57d35d;
+        --color47: rgba(143,255,80,0.7);
+        --primary-color: 87,211,93;
+        --primary-brighter-color: 87,211,93;
+    }
+}
+.dark .N_E:after {
+    background-color: #262626;
+    /* background-color: var(--color8); */
+}
